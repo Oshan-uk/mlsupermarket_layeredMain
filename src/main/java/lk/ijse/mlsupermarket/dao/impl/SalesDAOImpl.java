@@ -67,70 +67,70 @@ public class SalesDAOImpl implements SalesDAO {
         }
     }
 
-    @Override
-    public boolean returnSaleItem(String saleId, String productId,
-                                  int returnQty, double unitPrice) throws SQLException {
+//    @Override
+//    public boolean returnSaleItem(String saleId, String productId,
+//                                  int returnQty, double unitPrice) throws SQLException {
+//
+//        Connection conn = DBConnection.getInstance().getConnection();
+//
+//        try {
+//            conn.setAutoCommit(false);
+//
+//            PreparedStatement psReduce = conn.prepareStatement(
+//                    "UPDATE sales_item SET quantity = quantity - ? WHERE sale_id = ? AND product_id = ?");
+//
+//            psReduce.setInt(1, returnQty);
+//            psReduce.setString(2, saleId);
+//            psReduce.setString(3, productId);
+//            psReduce.executeUpdate();
+//
+//            conn.commit();
+//            return true;
+//
+//        } catch (SQLException ex) {
+//            conn.rollback();
+//            throw ex;
+//        } finally {
+//            conn.setAutoCommit(true);
+//        }
+//    }
 
-        Connection conn = DBConnection.getInstance().getConnection();
+//    @Override
+//    public List<SaleItemDTO> getAllSalesItems() throws Exception {
+//
+//        List<SaleItemDTO> list = new ArrayList<>();
+//
+//        String sql = "SELECT * FROM sales_item WHERE quantity > 0 ORDER BY CAST(SUBSTRING(sale_id, 2) AS UNSIGNED) DESC";
+//
+//        Connection conn = DBConnection.getInstance().getConnection();
+//        PreparedStatement pst = conn.prepareStatement(sql);
+//        ResultSet rs = pst.executeQuery();
+//
+//        while (rs.next()) {
+//            list.add(new SaleItemDTO(
+//                    rs.getString("sale_id"),
+//                    rs.getString("product_id"),
+//                    rs.getInt("quantity"),
+//                    rs.getDouble("unit_price"),
+//                    rs.getDouble("total_price")));
+//        }
+//
+//        return list;
+//    }
 
-        try {
-            conn.setAutoCommit(false);
-
-            PreparedStatement psReduce = conn.prepareStatement(
-                    "UPDATE sales_item SET quantity = quantity - ? WHERE sale_id = ? AND product_id = ?");
-
-            psReduce.setInt(1, returnQty);
-            psReduce.setString(2, saleId);
-            psReduce.setString(3, productId);
-            psReduce.executeUpdate();
-
-            conn.commit();
-            return true;
-
-        } catch (SQLException ex) {
-            conn.rollback();
-            throw ex;
-        } finally {
-            conn.setAutoCommit(true);
-        }
-    }
-
-    @Override
-    public List<SaleItemDTO> getAllSalesItems() throws Exception {
-
-        List<SaleItemDTO> list = new ArrayList<>();
-
-        String sql = "SELECT * FROM sales_item WHERE quantity > 0 ORDER BY CAST(SUBSTRING(sale_id, 2) AS UNSIGNED) DESC";
-
-        Connection conn = DBConnection.getInstance().getConnection();
-        PreparedStatement pst = conn.prepareStatement(sql);
-        ResultSet rs = pst.executeQuery();
-
-        while (rs.next()) {
-            list.add(new SaleItemDTO(
-                    rs.getString("sale_id"),
-                    rs.getString("product_id"),
-                    rs.getInt("quantity"),
-                    rs.getDouble("unit_price"),
-                    rs.getDouble("total_price")));
-        }
-
-        return list;
-    }
-
-    @Override
-    public void printStockReport() throws Exception {
-
-        Connection conn = DBConnection.getInstance().getConnection();
-
-        InputStream inputStream =
-                getClass().getResourceAsStream("/lk/ijse/mlsupermarket/reports/invoice_report.jasper");
-
-        JasperPrint jasperPrint =
-                JasperFillManager.fillReport(inputStream, new HashMap<>(), conn);
-
-        JasperViewer.viewReport(jasperPrint, false);
-    }
+//    @Override
+//    public void printStockReport() throws Exception {
+//
+//        Connection conn = DBConnection.getInstance().getConnection();
+//
+//        InputStream inputStream =
+//                getClass().getResourceAsStream("/lk/ijse/mlsupermarket/reports/invoice_report.jasper");
+//
+//        JasperPrint jasperPrint =
+//                JasperFillManager.fillReport(inputStream, new HashMap<>(), conn);
+//
+//        JasperViewer.viewReport(jasperPrint, false);
+//    }
 
     @Override
     public String generateNextSaleId() throws Exception {
@@ -151,21 +151,21 @@ public class SalesDAOImpl implements SalesDAO {
         return "S1";
     }
 
-    @Override
-    public double getUnitPrice(String saleId, String productId) throws SQLException {
-
-        String sql = "SELECT unit_price FROM sales_item WHERE sale_id = ? AND product_id = ?";
-
-        Connection conn = DBConnection.getInstance().getConnection();
-        PreparedStatement pst = conn.prepareStatement(sql);
-
-        pst.setString(1, saleId);
-        pst.setString(2, productId);
-        ResultSet rs = pst.executeQuery();
-
-        if (rs.next()) return rs.getDouble("unit_price");
-        return 0;
-    }
+//    @Override
+//    public double getUnitPrice(String saleId, String productId) throws SQLException {
+//
+//        String sql = "SELECT unit_price FROM sales_item WHERE sale_id = ? AND product_id = ?";
+//
+//        Connection conn = DBConnection.getInstance().getConnection();
+//        PreparedStatement pst = conn.prepareStatement(sql);
+//
+//        pst.setString(1, saleId);
+//        pst.setString(2, productId);
+//        ResultSet rs = pst.executeQuery();
+//
+//        if (rs.next()) return rs.getDouble("unit_price");
+//        return 0;
+//    }
 
     @Override
     public List<String> getAllSaleIds() throws SQLException {
