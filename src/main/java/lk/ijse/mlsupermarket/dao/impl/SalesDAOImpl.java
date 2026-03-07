@@ -17,7 +17,8 @@ public class SalesDAOImpl implements SalesDAO {
 
     @Override
     public boolean saveSale(Sales sales) throws SQLException{
-        return CrudUtil.execute("INSERT INTO sales (sale_id, total_amount, sale_date) VALUES (?, ?, ?)",
+        return CrudUtil.execute(
+                "INSERT INTO sales (sale_id, total_amount, sale_date) VALUES (?, ?, ?)",
                     sales.getSaleId(),
                     sales.getTotalAmount(),
                     sales.getSaleDate()
@@ -28,12 +29,9 @@ public class SalesDAOImpl implements SalesDAO {
     @Override
     public String generateNextSaleId() throws Exception {
 
-        Connection con = DBConnection.getInstance().getConnection();
-
-        String sql = "SELECT sale_id FROM sales ORDER BY CAST(SUBSTRING(sale_id, 2) AS UNSIGNED) DESC LIMIT 1";
-
-        PreparedStatement pst = con.prepareStatement(sql);
-        ResultSet rs = pst.executeQuery();
+        ResultSet rs = CrudUtil.execute(
+                "SELECT sale_id FROM sales ORDER BY CAST(SUBSTRING(sale_id, 2) AS UNSIGNED) DESC LIMIT 1"
+        );
 
         if (rs.next()) {
             String lastId = rs.getString("sale_id");
@@ -49,13 +47,13 @@ public class SalesDAOImpl implements SalesDAO {
 
         List<String> list = new ArrayList<>();
 
-        String sql = "SELECT sale_id FROM sales ORDER BY CAST(SUBSTRING(sale_id, 2) AS UNSIGNED) DESC";
+        ResultSet rs = CrudUtil.execute(
+                "SELECT sale_id FROM sales ORDER BY CAST(SUBSTRING(sale_id, 2) AS UNSIGNED) DESC"
+        );
 
-        Connection conn = DBConnection.getInstance().getConnection();
-        PreparedStatement pst = conn.prepareStatement(sql);
-        ResultSet rs = pst.executeQuery();
-
-        while (rs.next()) list.add(rs.getString("sale_id"));
+        while (rs.next()) {
+            list.add(rs.getString("sale_id"));
+        }
 
         return list;
     }

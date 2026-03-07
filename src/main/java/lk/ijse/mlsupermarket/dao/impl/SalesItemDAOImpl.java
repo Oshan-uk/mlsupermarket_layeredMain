@@ -20,11 +20,9 @@ public class SalesItemDAOImpl implements SalesItemDAO {
 
         List<SaleItemDTO> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM sales_item WHERE quantity > 0 ORDER BY CAST(SUBSTRING(sale_id, 2) AS UNSIGNED) DESC";
-
-        Connection conn = DBConnection.getInstance().getConnection();
-        PreparedStatement pst = conn.prepareStatement(sql);
-        ResultSet rs = pst.executeQuery();
+        ResultSet rs = CrudUtil.execute(
+                "SELECT * FROM sales_item WHERE quantity > 0 ORDER BY CAST(SUBSTRING(sale_id, 2) AS UNSIGNED) DESC"
+        );
 
         while (rs.next()) {
             list.add(new SaleItemDTO(
@@ -32,7 +30,8 @@ public class SalesItemDAOImpl implements SalesItemDAO {
                     rs.getString("product_id"),
                     rs.getInt("quantity"),
                     rs.getDouble("unit_price"),
-                    rs.getDouble("total_price")));
+                    rs.getDouble("total_price")
+            ));
         }
 
         return list;
@@ -42,16 +41,16 @@ public class SalesItemDAOImpl implements SalesItemDAO {
     @Override
     public double getUnitPrice(String saleId, String productId) throws SQLException {
 
-        String sql = "SELECT unit_price FROM sales_item WHERE sale_id = ? AND product_id = ?";
+        ResultSet rs = CrudUtil.execute(
+                "SELECT unit_price FROM sales_item WHERE sale_id = ? AND product_id = ?",
+                saleId,
+                productId
+        );
 
-        Connection conn = DBConnection.getInstance().getConnection();
-        PreparedStatement pst = conn.prepareStatement(sql);
+        if (rs.next()) {
+            return rs.getDouble("unit_price");
+        }
 
-        pst.setString(1, saleId);
-        pst.setString(2, productId);
-        ResultSet rs = pst.executeQuery();
-
-        if (rs.next()) return rs.getDouble("unit_price");
         return 0;
     }
 
