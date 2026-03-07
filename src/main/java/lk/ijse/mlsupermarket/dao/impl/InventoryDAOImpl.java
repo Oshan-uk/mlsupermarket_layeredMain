@@ -5,6 +5,7 @@ import lk.ijse.mlsupermarket.entity.Product;
 import lk.ijse.mlsupermarket.dao.CrudUtil;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,5 +61,16 @@ public class InventoryDAOImpl implements InventoryDAO {
         }
 
         return list;
+    }
+
+
+    @Override
+    public boolean reduceStock(String productId, int qty) throws SQLException {
+
+        return CrudUtil.execute(
+                "UPDATE inventory SET stock_quantity = stock_quantity - ? WHERE product_id = ?",
+                qty,
+                productId
+        );
     }
 }

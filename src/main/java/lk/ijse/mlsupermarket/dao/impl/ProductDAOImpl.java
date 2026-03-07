@@ -5,6 +5,7 @@ import lk.ijse.mlsupermarket.entity.Product;
 import lk.ijse.mlsupermarket.dao.CrudUtil;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,5 +105,17 @@ public class ProductDAOImpl implements ProductDAO {
         }
 
         return "P1";
+    }
+
+
+
+    @Override
+    public boolean reduceQuantity(String productId, int qty) throws SQLException {
+
+        return CrudUtil.execute(
+                "UPDATE product SET qty = qty - ? WHERE product_id = ?",
+                qty,
+                productId
+        );
     }
 }

@@ -5,6 +5,7 @@ import lk.ijse.mlsupermarket.dao.SuperDAO;
 import lk.ijse.mlsupermarket.entity.Inventory;
 import lk.ijse.mlsupermarket.entity.Product;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,4 +15,5 @@ public interface InventoryDAO extends SuperDAO {
 
     List<Product> getProductsByCategory(String category) throws Exception;
 
+    boolean reduceStock(String productId, int qty) throws SQLException;
 }

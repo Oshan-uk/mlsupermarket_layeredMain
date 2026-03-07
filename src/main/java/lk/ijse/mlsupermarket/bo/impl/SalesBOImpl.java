@@ -2,11 +2,15 @@ package lk.ijse.mlsupermarket.bo.impl;
 
 import lk.ijse.mlsupermarket.bo.custom.SalesBO;
 import lk.ijse.mlsupermarket.dao.DAOFactory;
+import lk.ijse.mlsupermarket.dao.custom.InventoryDAO;
+import lk.ijse.mlsupermarket.dao.custom.ProductDAO;
 import lk.ijse.mlsupermarket.dao.custom.SalesDAO;
 import lk.ijse.mlsupermarket.dao.custom.SalesItemDAO;
 import lk.ijse.mlsupermarket.db.DBConnection;
 import lk.ijse.mlsupermarket.dto.SalesDTO;
 import lk.ijse.mlsupermarket.dto.SaleItemDTO;
+import lk.ijse.mlsupermarket.entity.Product;
+import lk.ijse.mlsupermarket.entity.SaleItem;
 import lk.ijse.mlsupermarket.entity.Sales;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -27,15 +31,83 @@ public class SalesBOImpl implements SalesBO {
             (SalesItemDAO) DAOFactory.getInstance()
                     .getDAO(DAOFactory.DAOType.SALE_ITEM);
 
+    private final ProductDAO productDAO =
+            (ProductDAO) DAOFactory.getInstance()
+                    .getDAO(DAOFactory.DAOType.PRODUCT);
+
+    private final InventoryDAO inventoryDAO =
+            (InventoryDAO) DAOFactory.getInstance()
+                    .getDAO(DAOFactory.DAOType.INVENTORY);
+
+
+
+//    @Override
+//    public boolean saveSale(SalesDTO sale) throws Exception {
+//
+//
+//        for (SaleItemDTO dto : sale) {
+//
+//            salesItemDAO.saveSaleItem(
+//                    new SaleItem(
+//                            dto.getSaleId(),
+//                            dto.getProductId(),
+//                            dto.getQuantity(),
+//                            dto.getUnitPrice(),
+//                            dto.getTotal()
+//                    )
+//            );
+//
+//            productDAO.reduceQuantity(dto.getProductId(), dto.getQuantity());
+//
+//            inventoryDAO.reduceStock(dto.getProductId(), dto.getQuantity());
+//        }
+//
+//
+//
+//        return salesDAO.saveSale(
+//                new Sales(
+//                        sale.getSaleId(),
+//                        sale.getTotalAmount(),
+//                        sale.getSaleDate())
+//        );
+//    }
+
+
     @Override
-    public boolean saveSale(SalesDTO sale) throws Exception {
-        return salesDAO.saveSale(
+    public boolean saveSale(SalesDTO saleDTO, List<SaleItemDTO> items) throws Exception {
+
+
+        salesDAO.saveSale(
                 new Sales(
-                        sale.getSaleId(),
-                        sale.getTotalAmount(),
-                        sale.getSaleDate())
+                        saleDTO.getSaleId(),
+                        saleDTO.getTotalAmount(),
+                        saleDTO.getSaleDate()
+                )
         );
+
+        for (SaleItemDTO dto : items) {
+
+            salesItemDAO.saveSaleItem(
+                    new SaleItem(
+                            saleDTO.getSaleId(),
+                            dto.getProductId(),
+                            dto.getQuantity(),
+                            dto.getUnitPrice(),
+                            dto.getTotal()
+                    )
+            );
+
+
+            productDAO.reduceQuantity(dto.getProductId(), dto.getQuantity());
+
+            inventoryDAO.reduceStock(dto.getProductId(), dto.getQuantity());
+        }
+
+        return true;
     }
+
+
+
 
     @Override
     public boolean returnSaleItem(String saleId, String productId,

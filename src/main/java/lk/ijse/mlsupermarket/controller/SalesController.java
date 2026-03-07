@@ -183,7 +183,7 @@ public class SalesController {
 
             List<SaleItemDTO> items = new ArrayList<>(cartList);
 
-            if (salesBO.saveSale(sale)) {
+            if (salesBO.saveSale(sale,items)) {
                 new Alert(Alert.AlertType.INFORMATION, "Sale successfully completed!").show();
 
                 cartList.clear();

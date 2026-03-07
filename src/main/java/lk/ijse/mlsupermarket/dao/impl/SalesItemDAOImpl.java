@@ -1,8 +1,10 @@
 package lk.ijse.mlsupermarket.dao.impl;
 
+import lk.ijse.mlsupermarket.dao.CrudUtil;
 import lk.ijse.mlsupermarket.dao.custom.SalesItemDAO;
 import lk.ijse.mlsupermarket.db.DBConnection;
 import lk.ijse.mlsupermarket.dto.SaleItemDTO;
+import lk.ijse.mlsupermarket.entity.SaleItem;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -81,5 +83,19 @@ public class SalesItemDAOImpl implements SalesItemDAO {
 
         if (rs.next()) return rs.getDouble("unit_price");
         return 0;
+    }
+
+
+    @Override
+    public boolean saveSaleItem(SaleItem salesItem) throws SQLException {
+
+        return CrudUtil.execute(
+                "INSERT INTO sales_item (sale_id, product_id, quantity, unit_price, total_price) VALUES (?,?,?,?,?)",
+                salesItem.getSaleId(),
+                salesItem.getProductId(),
+                salesItem.getQuantity(),
+                salesItem.getUnitPrice(),
+                salesItem.getTotalPrice()
+        );
     }
 }
