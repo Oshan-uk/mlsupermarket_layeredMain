@@ -3,13 +3,14 @@ package lk.ijse.mlsupermarket.dao.custom;
 import lk.ijse.mlsupermarket.dto.SalesDTO;
 import lk.ijse.mlsupermarket.dto.SaleItemDTO;
 import lk.ijse.mlsupermarket.dao.SuperDAO;
+import lk.ijse.mlsupermarket.entity.Sales;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public interface SalesDAO extends SuperDAO {
 
-    boolean saveSale(SalesDTO sale, List<SaleItemDTO> items) throws SQLException;
+    boolean saveSale(Sales sale) throws SQLException;
 
 //    boolean returnSaleItem(String saleId, String productId,
 //                           int returnQty, double unitPrice) throws SQLException;

@@ -7,6 +7,7 @@ import lk.ijse.mlsupermarket.dao.custom.SalesItemDAO;
 import lk.ijse.mlsupermarket.db.DBConnection;
 import lk.ijse.mlsupermarket.dto.SalesDTO;
 import lk.ijse.mlsupermarket.dto.SaleItemDTO;
+import lk.ijse.mlsupermarket.entity.Sales;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
@@ -27,8 +28,13 @@ public class SalesBOImpl implements SalesBO {
                     .getDAO(DAOFactory.DAOType.SALE_ITEM);
 
     @Override
-    public boolean saveSale(SalesDTO sale, List<SaleItemDTO> items) throws Exception {
-        return salesDAO.saveSale(sale, items);
+    public boolean saveSale(SalesDTO sale) throws Exception {
+        return salesDAO.saveSale(
+                new Sales(
+                        sale.getSaleId(),
+                        sale.getTotalAmount(),
+                        sale.getSaleDate())
+        );
     }
 
     @Override

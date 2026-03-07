@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface SalesBO extends SuperBO {
 
-    boolean saveSale(SalesDTO sale, List<SaleItemDTO> items) throws Exception;
+    boolean saveSale(SalesDTO sale) throws Exception;
 
     boolean returnSaleItem(String saleId, String productId,
                            int returnQty, double unitPrice) throws Exception;

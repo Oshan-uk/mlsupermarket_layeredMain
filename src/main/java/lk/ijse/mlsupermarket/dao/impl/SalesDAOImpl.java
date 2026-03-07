@@ -1,9 +1,11 @@
 package lk.ijse.mlsupermarket.dao.impl;
 
+import lk.ijse.mlsupermarket.dao.CrudUtil;
 import lk.ijse.mlsupermarket.dao.custom.SalesDAO;
 import lk.ijse.mlsupermarket.db.DBConnection;
 import lk.ijse.mlsupermarket.dto.SalesDTO;
 import lk.ijse.mlsupermarket.dto.SaleItemDTO;
+import lk.ijse.mlsupermarket.entity.Sales;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -14,58 +16,68 @@ import java.util.*;
 public class SalesDAOImpl implements SalesDAO {
 
     @Override
-    public boolean saveSale(SalesDTO sale, List<SaleItemDTO> items) throws SQLException {
+    public boolean saveSale(Sales sales) throws SQLException{
+        return CrudUtil.execute("INSERT INTO sales (sale_id, total_amount, sale_date) VALUES (?, ?, ?)",
+                    sales.getSaleId(),
+                    sales.getTotalAmount(),
+                    sales.getSaleDate()
+                );
 
-        Connection conn = DBConnection.getInstance().getConnection();
-
-        try {
-            conn.setAutoCommit(false);
-
-            String sqlSale = "INSERT INTO sales (sale_id, total_amount, sale_date) VALUES (?, ?, ?)";
-            PreparedStatement psSale = conn.prepareStatement(sqlSale);
-
-            psSale.setString(1, sale.getSaleId());
-            psSale.setDouble(2, sale.getTotalAmount());
-            psSale.setString(3, sale.getSaleDate());
-            psSale.executeUpdate();
-
-            String sqlItem = "INSERT INTO sales_item (sale_id, product_id, quantity, unit_price, total_price) VALUES (?,?,?,?,?)";
-            PreparedStatement psItem = conn.prepareStatement(sqlItem);
-
-            String sqlUpdateProduct = "UPDATE product SET qty = qty - ? WHERE product_id = ?";
-            PreparedStatement psUpdateProduct = conn.prepareStatement(sqlUpdateProduct);
-
-            String sqlUpdateInventory = "UPDATE inventory SET stock_quantity = stock_quantity - ? WHERE product_id = ?";
-            PreparedStatement psUpdateInventory = conn.prepareStatement(sqlUpdateInventory);
-
-            for (SaleItemDTO it : items) {
-
-                psItem.setString(1, sale.getSaleId());
-                psItem.setString(2, it.getProductId());
-                psItem.setInt(3, it.getQuantity());
-                psItem.setDouble(4, it.getUnitPrice());
-                psItem.setDouble(5, it.getTotal());
-                psItem.executeUpdate();
-
-                psUpdateProduct.setInt(1, it.getQuantity());
-                psUpdateProduct.setString(2, it.getProductId());
-                psUpdateProduct.executeUpdate();
-
-                psUpdateInventory.setInt(1, it.getQuantity());
-                psUpdateInventory.setString(2, it.getProductId());
-                psUpdateInventory.executeUpdate();
-            }
-
-            conn.commit();
-            return true;
-
-        } catch (SQLException ex) {
-            conn.rollback();
-            throw ex;
-        } finally {
-            conn.setAutoCommit(true);
-        }
     }
+
+//    @Override
+//    public boolean saveSale(SalesDTO sale, List<SaleItemDTO> items) throws SQLException {
+//
+//        Connection conn = DBConnection.getInstance().getConnection();
+//
+//        try {
+//            conn.setAutoCommit(false);
+//
+//            String sqlSale = "INSERT INTO sales (sale_id, total_amount, sale_date) VALUES (?, ?, ?)";
+//            PreparedStatement psSale = conn.prepareStatement(sqlSale);
+//
+//            psSale.setString(1, sale.getSaleId());
+//            psSale.setDouble(2, sale.getTotalAmount());
+//            psSale.setString(3, sale.getSaleDate());
+//            psSale.executeUpdate();
+//
+//            String sqlItem = "INSERT INTO sales_item (sale_id, product_id, quantity, unit_price, total_price) VALUES (?,?,?,?,?)";
+//            PreparedStatement psItem = conn.prepareStatement(sqlItem);
+//
+//            String sqlUpdateProduct = "UPDATE product SET qty = qty - ? WHERE product_id = ?";
+//            PreparedStatement psUpdateProduct = conn.prepareStatement(sqlUpdateProduct);
+//
+//            String sqlUpdateInventory = "UPDATE inventory SET stock_quantity = stock_quantity - ? WHERE product_id = ?";
+//            PreparedStatement psUpdateInventory = conn.prepareStatement(sqlUpdateInventory);
+//
+//            for (SaleItemDTO it : items) {
+//
+//                psItem.setString(1, sale.getSaleId());
+//                psItem.setString(2, it.getProductId());
+//                psItem.setInt(3, it.getQuantity());
+//                psItem.setDouble(4, it.getUnitPrice());
+//                psItem.setDouble(5, it.getTotal());
+//                psItem.executeUpdate();
+//
+//                psUpdateProduct.setInt(1, it.getQuantity());
+//                psUpdateProduct.setString(2, it.getProductId());
+//                psUpdateProduct.executeUpdate();
+//
+//                psUpdateInventory.setInt(1, it.getQuantity());
+//                psUpdateInventory.setString(2, it.getProductId());
+//                psUpdateInventory.executeUpdate();
+//            }
+//
+//            conn.commit();
+//            return true;
+//
+//        } catch (SQLException ex) {
+//            conn.rollback();
+//            throw ex;
+//        } finally {
+//            conn.setAutoCommit(true);
+//        }
+//    }
 
 //    @Override
 //    public boolean returnSaleItem(String saleId, String productId,
