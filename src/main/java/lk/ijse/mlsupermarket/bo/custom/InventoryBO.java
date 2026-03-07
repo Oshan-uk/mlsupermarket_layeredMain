@@ -17,4 +17,7 @@ public interface InventoryBO extends SuperBO {
     List<InventoryDTO> getInventoryByCategory(String category) throws Exception;
 
     void printStockReport() throws Exception;
+
+    boolean returnSaleItem(String saleId, String productId,
+                                  int returnQty, double unitPrice) throws SQLException;
 }

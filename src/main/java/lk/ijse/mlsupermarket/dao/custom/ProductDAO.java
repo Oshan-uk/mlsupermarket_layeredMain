@@ -8,4 +8,5 @@ import java.sql.SQLException;
 public interface ProductDAO extends CrudDAO<Product> {
     String generateNextId() throws Exception;
     boolean reduceQuantity(String productId, int qty) throws SQLException;
+    boolean increaseQuantity(String productId, int qty) throws SQLException;
 }

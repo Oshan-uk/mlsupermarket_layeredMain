@@ -16,36 +16,6 @@ import java.util.List;
 public class SalesItemDAOImpl implements SalesItemDAO {
 
     @Override
-    public boolean returnSaleItem(String saleId, String productId,
-                                  int returnQty, double unitPrice) throws SQLException {
-
-        Connection conn = DBConnection.getInstance().getConnection();
-
-        try {
-            conn.setAutoCommit(false);
-
-            PreparedStatement psReduce = conn.prepareStatement(
-                    "UPDATE sales_item SET quantity = quantity - ? WHERE sale_id = ? AND product_id = ?");
-
-            psReduce.setInt(1, returnQty);
-            psReduce.setString(2, saleId);
-            psReduce.setString(3, productId);
-            psReduce.executeUpdate();
-
-            conn.commit();
-            return true;
-
-        } catch (SQLException ex) {
-            conn.rollback();
-            throw ex;
-        } finally {
-            conn.setAutoCommit(true);
-        }
-    }
-
-
-
-    @Override
     public List<SaleItemDTO> getAllSalesItems() throws Exception {
 
         List<SaleItemDTO> list = new ArrayList<>();

@@ -107,6 +107,14 @@ public class ProductDAOImpl implements ProductDAO {
         return "P1";
     }
 
+    @Override
+    public  boolean increaseQuantity(String productId, int qty) throws SQLException{
+        return CrudUtil.execute(
+                "UPDATE product SET qty = qty + ? WHERE product_id = ?",
+                qty,
+                productId
+        );
+    }
 
 
     @Override

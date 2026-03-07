@@ -12,16 +12,8 @@ public interface SalesDAO extends SuperDAO {
 
     boolean saveSale(Sales sale) throws SQLException;
 
-//    boolean returnSaleItem(String saleId, String productId,
-//                           int returnQty, double unitPrice) throws SQLException;
-
-//    List<SaleItemDTO> getAllSalesItems() throws Exception;
-
-//    void printStockReport() throws Exception;
-
     String generateNextSaleId() throws Exception;
 
-//    double getUnitPrice(String saleId, String productId) throws SQLException;
-
     List<String> getAllSaleIds() throws SQLException;
+
 }

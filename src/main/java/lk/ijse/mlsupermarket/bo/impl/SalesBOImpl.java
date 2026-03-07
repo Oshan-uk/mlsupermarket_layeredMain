@@ -40,39 +40,6 @@ public class SalesBOImpl implements SalesBO {
                     .getDAO(DAOFactory.DAOType.INVENTORY);
 
 
-
-//    @Override
-//    public boolean saveSale(SalesDTO sale) throws Exception {
-//
-//
-//        for (SaleItemDTO dto : sale) {
-//
-//            salesItemDAO.saveSaleItem(
-//                    new SaleItem(
-//                            dto.getSaleId(),
-//                            dto.getProductId(),
-//                            dto.getQuantity(),
-//                            dto.getUnitPrice(),
-//                            dto.getTotal()
-//                    )
-//            );
-//
-//            productDAO.reduceQuantity(dto.getProductId(), dto.getQuantity());
-//
-//            inventoryDAO.reduceStock(dto.getProductId(), dto.getQuantity());
-//        }
-//
-//
-//
-//        return salesDAO.saveSale(
-//                new Sales(
-//                        sale.getSaleId(),
-//                        sale.getTotalAmount(),
-//                        sale.getSaleDate())
-//        );
-//    }
-
-
     @Override
     public boolean saveSale(SalesDTO saleDTO, List<SaleItemDTO> items) throws Exception {
 
@@ -106,24 +73,16 @@ public class SalesBOImpl implements SalesBO {
         return true;
     }
 
-
-
-
     @Override
     public boolean returnSaleItem(String saleId, String productId,
                                   int returnQty, double unitPrice) throws Exception {
-        return salesItemDAO.returnSaleItem(saleId, productId, returnQty, unitPrice);
+        return inventoryDAO.returnSaleItem(saleId, productId, returnQty, unitPrice);
     }
 
     @Override
     public List<SaleItemDTO> getAllSalesItems() throws Exception {
         return salesItemDAO.getAllSalesItems();
     }
-
-//    @Override
-//    public void printStockReport() throws Exception {
-//        salesDAO.printStockReport();
-//    }
 
     @Override
     public String generateNextSaleId() throws Exception {

@@ -54,6 +54,7 @@ public class InventoryController {
             (SalesBO) BOFactory.getInstance()
                     .getBO(BOFactory.BOTypes.SALES);
 
+
     private final InventoryBO inventoryBO =
             (InventoryBO) BOFactory.getInstance()
                     .getBO(BOFactory.BOTypes.INVENTORY);
@@ -140,7 +141,8 @@ public class InventoryController {
             double unitPrice = salesBO.getUnitPrice(saleId, productId);
 
             boolean returned =
-                    salesBO.returnSaleItem(saleId, productId, qty, unitPrice);
+                    inventoryBO.returnSaleItem(saleId, productId, qty, unitPrice);
+
 
             if (returned) {
                 new Alert(Alert.AlertType.INFORMATION, "Return processed!").show();

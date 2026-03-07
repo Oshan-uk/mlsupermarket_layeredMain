@@ -16,4 +16,9 @@ public interface InventoryDAO extends SuperDAO {
     List<Product> getProductsByCategory(String category) throws Exception;
 
     boolean reduceStock(String productId, int qty) throws SQLException;
+
+    public boolean returnSaleItem(String saleId, String productId,
+                                  int returnQty, double unitPrice) throws SQLException;
+
+    boolean increaseStock(String productId, int qty) throws SQLException;
 }

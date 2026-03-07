@@ -9,9 +9,6 @@ import java.util.List;
 
 public interface SalesItemDAO extends SuperDAO {
 
-    public boolean returnSaleItem(String saleId, String productId,
-                                  int returnQty, double unitPrice) throws SQLException;
-
     public List<SaleItemDTO> getAllSalesItems() throws Exception;
     public double getUnitPrice(String saleId, String productId) throws SQLException;
     boolean saveSaleItem(SaleItem saleItem) throws SQLException;

@@ -12,6 +12,7 @@ import net.sf.jasperreports.view.JasperViewer;
 
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,5 +86,11 @@ public class InventoryBOImpl implements InventoryBO {
 
         JasperPrint jp = JasperFillManager.fillReport(inputStream, null, conn);
         JasperViewer.viewReport(jp, false);
+    }
+
+    @Override
+    public boolean returnSaleItem(String saleId, String productId,
+                                  int returnQty, double unitPrice) throws SQLException{
+        return inventoryDAO.returnSaleItem(saleId, productId, returnQty, unitPrice);
     }
 }

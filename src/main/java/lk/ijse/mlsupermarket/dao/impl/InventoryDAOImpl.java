@@ -1,9 +1,12 @@
 package lk.ijse.mlsupermarket.dao.impl;
 
 import lk.ijse.mlsupermarket.dao.custom.InventoryDAO;
+import lk.ijse.mlsupermarket.db.DBConnection;
 import lk.ijse.mlsupermarket.entity.Product;
 import lk.ijse.mlsupermarket.dao.CrudUtil;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,8 +18,7 @@ public class InventoryDAOImpl implements InventoryDAO {
     public List<Product> getAllProducts() throws Exception {
 
         ResultSet rs = CrudUtil.execute(
-                "SELECT product_id, name, category, qty, reorder_level " +
-                        "FROM product ORDER BY CAST(SUBSTRING(product_id, 2) AS UNSIGNED) DESC"
+                "SELECT product_id, name, category, qty, reorder_level FROM product ORDER BY CAST(SUBSTRING(product_id, 2) AS UNSIGNED) DESC"
         );
 
         List<Product> list = new ArrayList<>();
@@ -40,9 +42,7 @@ public class InventoryDAOImpl implements InventoryDAO {
     public List<Product> getProductsByCategory(String category) throws Exception {
 
         ResultSet rs = CrudUtil.execute(
-                "SELECT product_id, name, category, qty, reorder_level " +
-                        "FROM product WHERE category=? " +
-                        "ORDER BY CAST(SUBSTRING(product_id, 2) AS UNSIGNED) DESC",
+                "SELECT product_id, name, category, qty, reorder_level FROM product WHERE category=? ORDER BY CAST(SUBSTRING(product_id, 2) AS UNSIGNED) DESC",
                 category
         );
 
@@ -73,4 +73,44 @@ public class InventoryDAOImpl implements InventoryDAO {
                 productId
         );
     }
+
+    @Override
+    public boolean returnSaleItem(String saleId, String productId,
+                                  int returnQty, double unitPrice ) throws SQLException {
+
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        try {
+            conn.setAutoCommit(false);
+
+            PreparedStatement psReduce = conn.prepareStatement(
+                    "UPDATE sales_item SET quantity = quantity - ? WHERE sale_id = ? AND product_id = ?"
+            );
+
+            psReduce.setInt(1, returnQty);
+            psReduce.setString(2, saleId);
+            psReduce.setString(3, productId);
+            psReduce.executeUpdate();
+
+
+            conn.commit();
+            return true;
+
+        } catch (SQLException ex) {
+            conn.rollback();
+            throw ex;
+        } finally {
+            conn.setAutoCommit(true);
+        }
+    }
+
+    public  boolean increaseStock(String productId, int qty) throws SQLException{
+        return CrudUtil.execute(
+                "UPDATE inventory SET stock_quantity = stock_quantity + ? WHERE product_id = ?",
+                qty,
+                productId
+        );
+
+    }
+
 }
