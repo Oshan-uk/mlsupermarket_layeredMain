@@ -106,9 +106,9 @@ public class InventoryController {
         lvAlerts.getItems().clear();
         for (InventoryDTO item : tblInventory.getItems()) {
             if ("LOW STOCK".equals(item.getStatus())) {
-                lvAlerts.getItems().add("LOW STOCK: " + item.getName() + " (" + item.getQty() + ")");
+                lvAlerts.getItems().add("⚠ LOW STOCK: " + item.getName() + " (" + item.getQty() + ") ⚠");
             } else if ("OUT OF STOCK".equals(item.getStatus())) {
-                lvAlerts.getItems().add("OUT OF STOCK: " + item.getName());
+                lvAlerts.getItems().add(" \uD83D\uDED1 OUT OF STOCK: " + item.getName()+ " \uD83D\uDED1");
             }
         }
     }

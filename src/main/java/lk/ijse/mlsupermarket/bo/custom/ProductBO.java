@@ -5,6 +5,7 @@ import lk.ijse.mlsupermarket.dto.ProductDTO;
 import lk.ijse.mlsupermarket.entity.Customer;
 import lk.ijse.mlsupermarket.entity.Product;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,4 +22,7 @@ public interface ProductBO extends SuperBO {
     List<ProductDTO> getAllProducts() throws Exception;
 
     String generateNextProductId() throws Exception;
+
+    boolean increaseQuantity(String productId, int qty) throws SQLException;
+
 }

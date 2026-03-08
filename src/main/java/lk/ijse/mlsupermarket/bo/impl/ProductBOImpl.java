@@ -6,6 +6,7 @@ import lk.ijse.mlsupermarket.dao.custom.ProductDAO;
 import lk.ijse.mlsupermarket.dto.ProductDTO;
 import lk.ijse.mlsupermarket.entity.Product;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,5 +79,10 @@ public class ProductBOImpl implements ProductBO {
     @Override
     public String generateNextProductId() throws Exception {
         return productDAO.generateNextId();
+    }
+
+    @Override
+    public boolean increaseQuantity(String productId, int qty) throws SQLException {
+        return productDAO.increaseQuantity(productId, qty);
     }
 }
