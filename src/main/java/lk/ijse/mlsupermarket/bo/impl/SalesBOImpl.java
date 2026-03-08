@@ -43,36 +43,53 @@ public class SalesBOImpl implements SalesBO {
     @Override
     public boolean saveSale(SalesDTO saleDTO, List<SaleItemDTO> items) throws Exception {
 
+        Connection conn = DBConnection.getInstance().getConnection();
 
-        salesDAO.saveSale(
-                new Sales(
-                        saleDTO.getSaleId(),
-                        saleDTO.getTotalAmount(),
-                        saleDTO.getSaleDate()
-                )
-        );
+        try {
 
-        for (SaleItemDTO dto : items) {
+            conn.setAutoCommit(false);
 
-            salesItemDAO.saveSaleItem(
-                    new SaleItem(
+            salesDAO.saveSale(
+                    new Sales(
                             saleDTO.getSaleId(),
-                            dto.getProductId(),
-                            dto.getQuantity(),
-                            dto.getUnitPrice(),
-                            dto.getTotal()
+                            saleDTO.getTotalAmount(),
+                            saleDTO.getSaleDate()
                     )
             );
 
+            for (SaleItemDTO dto : items) {
 
-            productDAO.reduceQuantity(dto.getProductId(), dto.getQuantity());
+                salesItemDAO.saveSaleItem(
+                        new SaleItem(
+                                saleDTO.getSaleId(),
+                                dto.getProductId(),
+                                dto.getQuantity(),
+                                dto.getUnitPrice(),
+                                dto.getTotal()
+                        )
+                );
 
-            inventoryDAO.reduceStock(dto.getProductId(), dto.getQuantity());
+                productDAO.reduceQuantity(dto.getProductId(), dto.getQuantity());
+
+                inventoryDAO.reduceStock(dto.getProductId(), dto.getQuantity());
+
+            }
+
+            conn.commit();
+
+            return true;
+
+        } catch (Exception e) {
+
+            conn.rollback();
+
+            throw e;
+
+        } finally {
+
+            conn.setAutoCommit(true);
         }
-
-        return true;
     }
-
     @Override
     public boolean returnSaleItem(String saleId, String productId,
                                   int returnQty, double unitPrice) throws Exception {
